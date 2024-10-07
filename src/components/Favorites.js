@@ -1,7 +1,6 @@
-// src/components/Favorites.js
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Ensure Link is imported
-import { FaStar, FaTrash } from 'react-icons/fa'; // Added FaTrash icon
+import { Link } from 'react-router-dom';
+import { FaStar, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 
 function Favorites() {
@@ -9,16 +8,13 @@ function Favorites() {
   const [favoriteStations, setFavoriteStations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch favorites from localStorage
   useEffect(() => {
     const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
     setFavorites(storedFavorites);
   }, []);
 
-  // Fetch station details for favorite stations
   useEffect(() => {
     if (favorites.length > 0) {
-      // Fetch each station individually since the API might not support multiple IDs
       const fetchStations = async () => {
         try {
           const promises = favorites.map(id => axios.get(`https://api.irail.be/stations/?format=json&id=${id}&lang=en`));
@@ -38,7 +34,6 @@ function Favorites() {
     }
   }, [favorites]);
 
-  // Remove a station from favorites
   const removeFavorite = (id) => {
     const updatedFavorites = favorites.filter((fav) => fav !== id);
     setFavorites(updatedFavorites);

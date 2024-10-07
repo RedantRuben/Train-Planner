@@ -9,7 +9,6 @@ function StationDetail() {
   const [favorites, setFavorites] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // Fetch station data on mount
   useEffect(() => {
     axios
       .get(`https://api.irail.be/liveboard/?id=BE.NMBS.${id}&format=json&arrdep=departure`)
@@ -20,13 +19,11 @@ function StationDetail() {
         console.error('Error fetching liveboard:', error);
       });
 
-    // Check if the station is a favorite
     const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
     setFavorites(storedFavorites);
     setIsFavorite(storedFavorites.includes(id));
   }, [id]);
 
-  // Toggle favorite status for the station
   const toggleFavorite = () => {
     let updatedFavorites = [...favorites];
     if (isFavorite) {
@@ -39,7 +36,6 @@ function StationDetail() {
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
   };
 
-  // Calculate delay in minutes and apply color-coding
   const renderDelay = (delay) => {
     if (delay === 0) return <span className="text-green-500">On time</span>;
     const delayInMinutes = Math.floor(delay / 60);
@@ -54,7 +50,6 @@ function StationDetail() {
     <div>
       <h1 className="text-2xl font-bold mb-4">Station Details</h1>
 
-      {/* Favorite Station Button */}
       <button
         onClick={toggleFavorite}
         className={`mt-2 px-4 py-2 rounded ${isFavorite ? 'bg-yellow-500' : 'bg-gray-200'} hover:bg-yellow-600 transition duration-200 flex items-center`}
@@ -72,7 +67,6 @@ function StationDetail() {
               <p>Departure time: {new Date(train.time * 1000).toLocaleTimeString()}</p>
               <p>Delay: {renderDelay(train.delay)}</p>
 
-              {/* Buy Ticket Button */}
               <a
                 href={`https://www.belgiantrain.be/en/search`}
                 target="_blank"

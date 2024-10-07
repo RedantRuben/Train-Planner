@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FaTrain, FaMapMarkerAlt, FaSearch, FaTimes } from 'react-icons/fa';
 import { AiOutlineSwap } from 'react-icons/ai';
-import debounce from 'lodash.debounce'; // Ensure lodash.debounce is installed
+import debounce from 'lodash.debounce';
 
 function JourneyPlanner() {
   const [departure, setDeparture] = useState('');
@@ -11,17 +11,14 @@ function JourneyPlanner() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Autocomplete states
   const [departureSuggestions, setDepartureSuggestions] = useState([]);
   const [arrivalSuggestions, setArrivalSuggestions] = useState([]);
   const [showDepartureSuggestions, setShowDepartureSuggestions] = useState(false);
   const [showArrivalSuggestions, setShowArrivalSuggestions] = useState(false);
 
-  // Refs for handling clicks outside the suggestion lists
   const departureRef = useRef();
   const arrivalRef = useRef();
 
-  // Debounced functions to fetch station suggestions
   const fetchDepartureSuggestions = debounce((query) => {
     if (query.length < 2) {
       setDepartureSuggestions([]);
@@ -52,7 +49,6 @@ function JourneyPlanner() {
       });
   }, 300);
 
-  // Handle input changes for departure
   const handleDepartureChange = (e) => {
     const value = e.target.value;
     setDeparture(value);
@@ -60,7 +56,6 @@ function JourneyPlanner() {
     setShowDepartureSuggestions(true);
   };
 
-  // Handle input changes for arrival
   const handleArrivalChange = (e) => {
     const value = e.target.value;
     setArrival(value);
@@ -68,21 +63,18 @@ function JourneyPlanner() {
     setShowArrivalSuggestions(true);
   };
 
-  // Handle selection of a departure suggestion
   const selectDeparture = (station) => {
     setDeparture(station.name);
     setDepartureSuggestions([]);
     setShowDepartureSuggestions(false);
   };
 
-  // Handle selection of an arrival suggestion
   const selectArrival = (station) => {
     setArrival(station.name);
     setArrivalSuggestions([]);
     setShowArrivalSuggestions(false);
   };
 
-  // Close suggestion lists when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (departureRef.current && !departureRef.current.contains(event.target)) {
@@ -99,11 +91,9 @@ function JourneyPlanner() {
   }, []);
 
   const handleJourneyPlanner = () => {
-    // Reset previous states
     setConnections([]);
     setError('');
 
-    // Basic form validation
     if (!departure.trim() || !arrival.trim()) {
       setError('Please enter both departure and arrival stations.');
       return;
@@ -132,7 +122,6 @@ function JourneyPlanner() {
       });
   };
 
-  // Corrected formatDuration function assuming duration is in seconds
   const formatDuration = (durationStr) => {
     const durationInSeconds = parseInt(durationStr, 10);
     if (isNaN(durationInSeconds) || durationInSeconds < 0) {
@@ -141,19 +130,13 @@ function JourneyPlanner() {
     const totalMinutes = Math.floor(durationInSeconds / 60);
     const remainingSeconds = durationInSeconds % 60;
 
-    // Optionally, include seconds if needed
-    // return `${totalMinutes} mins ${remainingSeconds} secs`;
-
     return `${totalMinutes} mins`;
   };
 
-  // Function to get number of transfers
   const getTransfers = (connection) => {
-    // Assuming transfers are available in connection.transfers
     return connection.transfers;
   };
 
-  // Function to swap departure and arrival
   const swapStations = () => {
     const temp = departure;
     setDeparture(arrival);
@@ -166,9 +149,7 @@ function JourneyPlanner() {
         <FaTrain className="mr-2" /> Journey Planner
       </h1>
 
-      {/* Form Section */}
       <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
-        {/* Departure Input */}
         <div className="relative w-full md:w-1/2" ref={departureRef}>
           <div className="flex items-center">
             <FaMapMarkerAlt className="absolute left-3 text-gray-400" />
@@ -190,7 +171,6 @@ function JourneyPlanner() {
               />
             )}
           </div>
-          {/* Departure Suggestions */}
           {showDepartureSuggestions && departureSuggestions.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
               {departureSuggestions.map((station, index) => (
@@ -206,7 +186,6 @@ function JourneyPlanner() {
           )}
         </div>
 
-        {/* Swap Button */}
         <button
           onClick={swapStations}
           className="mt-4 md:mt-0 p-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition duration-200"
@@ -215,7 +194,6 @@ function JourneyPlanner() {
           <AiOutlineSwap size={24} />
         </button>
 
-        {/* Arrival Input */}
         <div className="relative w-full md:w-1/2" ref={arrivalRef}>
           <div className="flex items-center">
             <FaMapMarkerAlt className="absolute left-3 text-gray-400" />
@@ -237,7 +215,6 @@ function JourneyPlanner() {
               />
             )}
           </div>
-          {/* Arrival Suggestions */}
           {showArrivalSuggestions && arrivalSuggestions.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
               {arrivalSuggestions.map((station, index) => (
@@ -253,7 +230,6 @@ function JourneyPlanner() {
           )}
         </div>
 
-        {/* Plan Journey Button */}
         <button
           onClick={handleJourneyPlanner}
           className="w-full md:w-auto px-6 py-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 flex items-center justify-center"
@@ -262,14 +238,12 @@ function JourneyPlanner() {
         </button>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
           {error}
         </div>
       )}
 
-      {/* Loading Indicator */}
       {loading && (
         <div className="mt-4 flex items-center justify-center">
           <svg
@@ -296,7 +270,6 @@ function JourneyPlanner() {
         </div>
       )}
 
-      {/* Display connections */}
       {!loading && connections.length > 0 && (
         <div className="mt-6">
           <h2 className="text-2xl font-semibold mb-4 text-blue-500 flex items-center">
@@ -309,7 +282,7 @@ function JourneyPlanner() {
                 className="p-4 border border-gray-200 rounded-md shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex justify-between items-center">
-                  {/* Departure Information */}
+
                   <div>
                     <p className="text-lg font-medium text-gray-800 flex items-center">
                       <FaMapMarkerAlt className="mr-2 text-green-500" />{' '}
@@ -326,7 +299,6 @@ function JourneyPlanner() {
 
                   <span className="text-xl text-gray-400">→</span>
 
-                  {/* Arrival Information */}
                   <div>
                     <p className="text-lg font-medium text-gray-800 flex items-center">
                       <FaMapMarkerAlt className="mr-2 text-red-500" />{' '}
@@ -342,7 +314,6 @@ function JourneyPlanner() {
                   </div>
                 </div>
 
-                {/* Additional Details */}
                 <div className="mt-2 flex justify-between text-sm text-gray-600">
                   <span>
                     <strong>Duration:</strong> {formatDuration(connection.duration)}

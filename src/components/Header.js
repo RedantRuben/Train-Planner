@@ -1,7 +1,6 @@
-// src/components/Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaStar, FaRoute, FaTrain } from 'react-icons/fa'; // Import FaTrain
+import { FaStar, FaRoute, FaTrain } from 'react-icons/fa';
 
 function Header() {
   return (
@@ -11,12 +10,11 @@ function Header() {
         Train Stations
       </Link>
       <div className="flex space-x-6">
-        {/* Updated Journey Planner Link with FaTrain Icon */}
         <Link
           to="/journey-planner"
           className="flex items-center hover:text-gray-200 transition-colors duration-200 text-white"
         >
-          <FaTrain className="mr-1" /> {/* Changed from FaRoute to FaTrain */}
+          <FaTrain className="mr-1" />
           Journey Planner
         </Link>
         <Link

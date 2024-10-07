@@ -1,11 +1,9 @@
-// src/components/Pagination.js
 import React from 'react';
 
 function Pagination({ stationsPerPage, totalStations, paginate, currentPage }) {
   const pageNumbers = [];
   const totalPages = Math.ceil(totalStations / stationsPerPage);
 
-  // Calculate the range of pages to show
   const startPage = Math.max(1, currentPage - 3);
   const endPage = Math.min(totalPages, currentPage + 3);
 
@@ -15,7 +13,6 @@ function Pagination({ stationsPerPage, totalStations, paginate, currentPage }) {
 
   return (
     <nav className="mt-4 flex justify-center items-center space-x-2">
-      {/* Previous Arrow */}
       {currentPage > 1 && (
         <button
           onClick={() => paginate(currentPage - 1)}
@@ -25,7 +22,6 @@ function Pagination({ stationsPerPage, totalStations, paginate, currentPage }) {
         </button>
       )}
 
-      {/* Show the available page numbers */}
       {pageNumbers.map(number => (
         <button
           key={number}
@@ -36,7 +32,6 @@ function Pagination({ stationsPerPage, totalStations, paginate, currentPage }) {
         </button>
       ))}
 
-      {/* Next Arrow */}
       {currentPage < totalPages && (
         <button
           onClick={() => paginate(currentPage + 1)}

@@ -1,10 +1,9 @@
-// src/components/StationsList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Ensure Link is imported
+import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import Pagination from './Pagination';
-import { FaStar, FaMapMarkerAlt } from 'react-icons/fa'; // Added FaMapMarkerAlt icon
+import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import image1 from '../assets/image1.jpg';
 import image2 from '../assets/image2.jpg';
 import image3 from '../assets/image3.jpg';
@@ -26,11 +25,9 @@ function StationsList() {
   const [userLocation, setUserLocation] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
-  // Fetch stations on load
   useEffect(() => {
     axios.get('https://api.irail.be/stations/?format=json&lang=en')
       .then(response => {
-        // Ensure each station has a unique id
         const uniqueStations = response.data.station.filter((station, index, self) =>
           index === self.findIndex((s) => (
             s.id === station.id
@@ -43,7 +40,6 @@ function StationsList() {
         console.error('Error fetching stations:', error);
       });
 
-    // Get user location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -58,12 +54,10 @@ function StationsList() {
       );
     }
 
-    // Fetch favorites from localStorage
     const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
     setFavorites(storedFavorites);
   }, []);
 
-  // Sort stations by proximity once location is available
   useEffect(() => {
     if (userLocation && stations.length > 0) {
       const sortedStations = [...stations].sort((a, b) => {
@@ -81,9 +75,8 @@ function StationsList() {
     }
   }, [userLocation, stations]);
 
-  // Function to calculate the distance between two coordinates (Haversine formula)
   const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km
+    const R = 6371;
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
     const a =
@@ -91,7 +84,7 @@ function StationsList() {
       Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
+    return R * c;
   };
 
   const deg2rad = (deg) => {
@@ -103,7 +96,7 @@ function StationsList() {
       station.name.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredStations(filtered);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const indexOfLastStation = currentPage * stationsPerPage;
@@ -117,7 +110,6 @@ function StationsList() {
     return images[randomIndex];
   };
 
-  // Toggle favorite status for the station
   const toggleFavorite = (id) => {
     let updatedFavorites = [...favorites];
     if (updatedFavorites.includes(id)) {
